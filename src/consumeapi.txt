@@ -1,0 +1,49 @@
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
+
+class App extends Component {
+
+  constructor(props){
+    super(props)
+    this.state = {
+      cards:[]
+    }
+  }
+
+  componentWillMount(){
+    fetch('http://daw-tcg.test/api/cards')
+    .then(response=> response.json())
+    .then(cards =>{
+      cards.results.array.forEach(card => {
+        let data = {
+          name:card.name,
+          attack:card.attack,
+          defense:card.defense
+        }
+        this.setState({ cards:this.state.cards.concat([data]) })
+
+        
+      });
+    })
+  }
+  render() {
+    console.log(this.state.cards.length)
+    if(this.state.cards.length > 0)
+    {
+      return(
+        <div>
+          { this.state.cards.map(card => <Card name={card.name} attack={card.attack} defense={card.defense}        />)}
+        </div>
+      )
+    }
+  }
+}
+
+const Card = (props) =>(
+  <li>{props.name}-----{props.attack}----{props.defense}</li>
+)
+
+
+
+export default App;
